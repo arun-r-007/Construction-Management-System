@@ -1,4 +1,4 @@
-# 🏗️ Construction Management System (C++ Project)
+# 🏗️ ConstruxPlus - Construction Management System (C++ Project)
 
 A simple Construction Management System written in **C++**, applying core Object-Oriented Programming concepts like **encapsulation** and **abstraction**. This project helps manage construction project records, GST billing, and contractor details — perfect for beginners learning C++ with real-world application.
 

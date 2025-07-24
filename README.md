@@ -86,6 +86,12 @@ Project added successfully.
 
 ---
 
+## Website Screenshot
+
+![website Screenshot](https://github.com/user-attachments/assets/117730bc-eda4-401c-88f6-79c0b1efab54)
+
+---
+
 ## Output Screenshot
 
 ![Demo Image](https://github.com/user-attachments/assets/c73e9e97-ce9d-4f02-931e-abd45ede12a1)

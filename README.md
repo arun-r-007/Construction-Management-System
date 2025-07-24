@@ -82,7 +82,7 @@ Project added successfully.
 
 ## Demo Website
 
-![live site](https://arun-r-007.github.io/ConstruxPlus/index.html)
+[live Website](https://arun-r-007.github.io/ConstruxPlus/)
 
 ---
 

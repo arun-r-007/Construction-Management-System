@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ConstruxPlus</title>
+  <style>
+    :root {
+      --primary: #1e3c72;
+      --secondary: #2a5298;
+      --accent: #f39c12;
+      --light: #f4f4f4;
+      --dark: #333;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      color: var(--light);
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    canvas#bgCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    header {
+      text-align: center;
+      margin: 2rem 0 1rem;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      color: var(--accent);
+    }
+
+    header h2 {
+      font-size: 1.5rem;
+      color: var(--accent);
+      margin-top: 0.5rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.4rem;
+      border-radius: 5px;
+      border: none;
+      font-size: 0.9rem;
+    }
+
+    button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    button:hover {
+      background: #e67e22;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 2rem;
+      border-collapse: collapse;
+      background: #fff;
+      color: var(--dark);
+    }
+
+    th, td {
+      padding: 1rem;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .delete-btn {
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .delete-btn:hover {
+      background: #c0392b;
+    }
+
+    @media (max-width: 768px) {
+      form {
+        align-items: stretch;
+      }
+
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      th {
+        display: none;
+      }
+
+      td {
+        position: relative;
+        padding-left: 50%;
+      }
+
+      td::before {
+        position: absolute;
+        left: 0;
+        width: 45%;
+        padding-left: 1rem;
+        font-weight: bold;
+      }
+
+      td:nth-of-type(1)::before { content: "Project ID"; }
+      td:nth-of-type(2)::before { content: "Project Name"; }
+      td:nth-of-type(3)::before { content: "Contractor"; }
+      td:nth-of-type(4)::before { content: "Base Cost"; }
+      td:nth-of-type(5)::before { content: "GST"; }
+      td:nth-of-type(6)::before { content: "Total Cost"; }
+      td:nth-of-type(7)::before { content: "Action"; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bgCanvas"></canvas>
+  <br><br><br>
+
+  <header>
+    <h1>ConstruxPlus</h1>
+    <h2>Construction Management System in C++</h2>
+  </header>
+
+  <br><br><br>
+
+  <div class="container">
+    <form id="projectForm">
+      <div class="form-group">
+        <label for="projectID">Project ID</label>
+        <input type="number" id="projectID" required />
+      </div>
+      <div class="form-group">
+        <label for="projectName">Project Name</label>
+        <input type="text" id="projectName" required />
+      </div>
+      <div class="form-group">
+        <label for="contractorName">Contractor Name</label>
+        <input type="text" id="contractorName" required />
+      </div>
+      <div class="form-group">
+        <label for="baseCost">Base Cost</label>
+        <input type="number" id="baseCost" required />
+      </div>
+      <button type="submit">Add Project</button>
+    </form>
+
+    <table id="projectsTable">
+      <thead>
+        <tr>
+          <th>Project ID</th>
+          <th>Project Name</th>
+          <th>Contractor</th>
+          <th>Base Cost</th>
+          <th>GST (18%)</th>
+          <th>Total Cost</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    const form = document.getElementById("projectForm");
+    const tableBody = document.querySelector("#projectsTable tbody");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const projectID = document.getElementById("projectID").value;
+      const projectName = document.getElementById("projectName").value;
+      const contractorName = document.getElementById("contractorName").value;
+      const baseCost = parseFloat(document.getElementById("baseCost").value);
+
+      const gstAmount = (baseCost * 18) / 100;
+      const totalCost = baseCost + gstAmount;
+
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${projectID}</td>
+        <td>${projectName}</td>
+        <td>${contractorName}</td>
+        <td>${baseCost.toFixed(2)}</td>
+        <td>${gstAmount.toFixed(2)}</td>
+        <td>${totalCost.toFixed(2)}</td>
+        <td><button class="delete-btn">Delete</button></td>
+      `;
+
+      row.querySelector(".delete-btn").addEventListener("click", () => {
+        tableBody.removeChild(row);
+      });
+
+      tableBody.appendChild(row);
+      form.reset();
+    });
+
+    // Canvas animation for floating bubbles
+    const canvas = document.getElementById("bgCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let bubbles = [];
+
+    class Bubble {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = canvas.height + Math.random() * canvas.height;
+        this.radius = Math.random() * 10 + 5;
+        this.speed = Math.random() * 1 + 0;
+        this.opacity = Math.random() * 0.3 + 0.2;
+      }
+
+      update() {
+        this.y -= this.speed;
+        if (this.y < -this.radius) {
+          this.y = canvas.height + this.radius;
+          this.x = Math.random() * canvas.width;
+        }
+      }
+
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+        ctx.fill();
+      }
+    }
+
+    function initBubbles() {
+      bubbles = [];
+      for (let i = 0; i < 100; i++) {
+        bubbles.push(new Bubble());
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      bubbles.forEach(bubble => {
+        bubble.update();
+        bubble.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initBubbles();
+    });
+
+    initBubbles();
+    animate();
+  </script>
+</body>
+</html>

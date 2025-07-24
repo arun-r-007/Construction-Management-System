@@ -77,9 +77,16 @@ Enter Base Cost (₹): 1200000
 Project added successfully.
 ```
 
+
 ---
 
-## Demo Screenshot
+## Demo Website
+
+![live site](https://arun-r-007.github.io/ConstruxPlus/index.html)
+
+---
+
+## Output Screenshot
 
 ![Demo Image](https://github.com/user-attachments/assets/c73e9e97-ce9d-4f02-931e-abd45ede12a1)
 
